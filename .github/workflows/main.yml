@@ -1,0 +1,51 @@
+name: Deploy Course via API
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  upload-course:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install requests pydantic pyyaml
+
+      # 1. Настраиваем SSH
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      # 2. Поднимаем туннель к API (Порт 8000)
+      # Теперь GitHub Runner сможет видеть ваш сервер как http://127.0.0.1:8000
+      - name: Create SSH Tunnel
+        run: |
+          ssh -o StrictHostKeyChecking=no -f -N -L 8000:127.0.0.1:8000 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+          echo "✅ Tunnel established for API on port 8000"
+
+      # 3. Запускаем загрузку
+      - name: Run Course Uploader
+        env:
+          # Эти переменные берутся из обновленных секретов
+          LMS_API_URL: ${{ secrets.LMS_API_URL }}
+          LMS_API_TOKEN: ${{ secrets.LMS_API_TOKEN }}
+        run: |
+          # Укажите путь к архиву или папке.
+          # Если курс лежит в папке, его лучше сначала заархивировать для runner.py, 
+          # либо запускать runner указывая путь к zip.
+          
+          # Пример: если курс лежит в папке IRTEGOV_NEW
+          zip -r course_archive.zip IRTEGOV_NEW/
+          
+          # Запуск скрипта
+          python runner.py course_archive.zip
