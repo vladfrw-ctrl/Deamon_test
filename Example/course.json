@@ -1,9 +1,8 @@
 {
   "title": "Imperative Programming",
-  "description": "CCCCCCCCCCCCC",
+  "description": "Introduction to C programming, memory management, and algorithms.",
   "modules": [
     {
-      "id": "Lecture-1",
       "title": "123",
       "content": [
         {
@@ -19,31 +18,27 @@
         {
           "type": "task",
           "title": "333",
-          "status": "unseen",
           "contentUrl": "content/Lecture-1/333.md",
           "submissionsUrl": "content/Lecture-1/333.json",
-          "difficulty": "Easy"
+          "difficulty": "easy"
         },
         {
           "type": "task",
           "title": "444",
-          "status": "attempted",
           "contentUrl": "content/Lecture-1/444.md",
           "submissionsUrl": "content/Lecture-1/444.json",
-          "difficulty": "Medium"
+          "difficulty": "medium"
         },
         {
           "type": "task",
           "title": "555",
-          "status": "solved",
           "contentUrl": "content/Lecture-1/555.md",
           "submissionsUrl": "content/Lecture-1/555.json",
-          "difficulty": "Hard"
+          "difficulty": "hard"
         }
       ]
     },
     {
-      "id": "lecture-2",
       "title": "234",
       "content": [
         {
@@ -59,5 +54,5 @@
       ]
     }
   ],
-  "allowed_users": "admin@nsuts.ru"
+  "allowed_users": ["admin@nsuts.ru"]
 }
