@@ -1,15 +1,19 @@
-name: Deploy Course to Server
+name: Deploy via Public API
 
 on:
-  push:
-    branches: ["main"]
-  workflow_dispatch:
+  pull_request_target:
+    types: [labeled]
 
 jobs:
-  upload-course:
+  deploy-via-api:
+    if: contains(github.event.pull_request.labels.*.name, 'deploy')
     runs-on: ubuntu-latest
+
     steps:
+      # 1. Скачиваем содержимое репозитория (оно попадает в текущую папку)
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -17,25 +21,20 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install requests pydantic pyyaml
-
-      # 1. SSH Туннель к API (порт 8000)
-      - name: Setup SSH Tunnel
-        uses: webfactory/ssh-agent@v0.8.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-
-      - name: Create Tunnel
         run: |
-          ssh -o StrictHostKeyChecking=no -f -N -L 8000:127.0.0.1:8000 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
-          echo "Tunnel opened to 8000"
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # Убедитесь, что устанавливаются все нужные библиотеки для клиента
+          pip install requests pydantic pyyaml
 
-      # 2. Запуск загрузки любого ZIP-архива
+      # 2. Запускаем runner.py
+      # Теперь мы передаем точку "." (текущая директория), так как checkout распаковал курс прямо сюда.
+      # PYTHONPATH=. нужен, чтобы питон видел пакет src как модуль.
       - name: Upload Course
         env:
-          LMS_API_URL: http://127.0.0.1:8000
+          LMS_API_URL: ${{ secrets.LMS_API_URL }}
           LMS_API_TOKEN: ${{ secrets.LMS_API_TOKEN }}
+          PYTHONPATH: .
         run: |
-          # Команда *.zip найдет первый попавшийся zip-файл в папке
-          echo "Found archive: " *.zip
-          python runner.py *.zip
+          echo "🚀 Sending to Public API: $LMS_API_URL"
+          # Запускаем скрипт, указывая "." как путь к папке с курсом
+          python src/runner.py .
