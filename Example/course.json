@@ -58,5 +58,6 @@
         }
       ]
     }
-  ]
+  ],
+  "allowed_users": "admin@nsuts.ru"
 }
