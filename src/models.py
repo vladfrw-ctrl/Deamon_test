@@ -10,9 +10,9 @@ class ElementType(str, Enum):
 
 
 class Difficulty(str, Enum):
-    Easy = "Easy"
-    Medium = "Medium"
-    Hard = "Hard"
+    Easy = "easy"
+    Medium = "medium"
+    Hard = "hard"
 
 
 class TaskModel(BaseModel):
@@ -42,6 +42,11 @@ class ModuleModel(BaseModel):
 class CourseModel(BaseModel):
     course_name: str
     description: Optional[str] = None
+
+    # ИСПРАВЛЕНО: Добавлено поле allowed_users
+    # Используем default_factory=list, чтобы по умолчанию был пустой список, а не None
+    allowed_users: List[str] = Field(default_factory=list)
+
     modules: List[ModuleModel]
 
     @field_validator("modules")
