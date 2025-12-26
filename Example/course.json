@@ -54,5 +54,7 @@
       ]
     }
   ],
-  "allowed_users": ["stud@nsuts.ru"]
+  "allowed_users": [
+    "stud@nsuts.ru"
+  ]
 }
