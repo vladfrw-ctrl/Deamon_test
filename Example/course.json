@@ -20,21 +20,18 @@
           "type": "task",
           "title": "333",
           "contentUrl": "content/Lecture-1/333.md",
-          "submissionsUrl": "content/Lecture-1/333.json",
           "difficulty": "easy"
         },
         {
           "type": "task",
           "title": "444",
           "contentUrl": "content/Lecture-1/444.md",
-          "submissionsUrl": "content/Lecture-1/444.json",
           "difficulty": "medium"
         },
         {
           "type": "task",
           "title": "555",
           "contentUrl": "content/Lecture-1/555.md",
-          "submissionsUrl": "content/Lecture-1/555.json",
           "difficulty": "hard"
         }
       ]
